@@ -17,7 +17,7 @@ end
 %}
 
 %put the files into an image datastore with labels ship or iceberg
-imds = imageDatastore(strcat(pwd,'\images'),...
+imds = imageDatastore(strcat(pwd,'\images\rotateTwoDim'),...
     'IncludeSubfolders',true,...
     'LabelSource','foldernames');
 
@@ -34,11 +34,12 @@ end
 tested with:
 200
 %}
-numTrainingFiles = 600;
-[imdsTrain,imdsTest] = splitEachLabel(imds,numTrainingFiles,'randomize');
-      
+numTrainingFiles = 450;
+[imdsTrain,imdsTest] = splitEachLabel(imds,.6,'randomized');
+%[imdsTrain,imdsTest] = splitEachLabel(imds,numTrainingFiles,'randomized');
+
 layers = [
-    imageInputLayer([75 75 1])
+    imageInputLayer([75 75 3])
     
     convolution2dLayer(3,8,'Padding','same')
     batchNormalizationLayer
@@ -56,42 +57,29 @@ layers = [
     batchNormalizationLayer
     reluLayer   
     
-    
+    dropoutLayer
     fullyConnectedLayer(2)
     softmaxLayer
     classificationLayer];
-%this layer doesnt get anything good
-%{
-layers = [imageInputLayer([75 75 1]);
-          convolution2dLayer(5,16); %wtf do with this
-          reluLayer(); %wtf is this
-          maxPooling2dLayer(2,'Stride',2);
-          fullyConnectedLayer(2); %cant be 3
-          softmaxLayer();
-          classificationLayer()];
-    
-    %}
-%doesnt work well either 
-%{
-options = trainingOptions('sgdm',...
-    'LearnRateSchedule','piecewise',...
-    'LearnRateDropFactor',0.2,...
-    'LearnRateDropPeriod',5,...
-    'MaxEpochs',200,...
-    'Verbose', 1,...
-    'Plots','training-progress');
-%}
+
 
 %does its job. kinda
 options = trainingOptions('sgdm', ...
     'MaxEpochs',200,...
-    'InitialLearnRate',1e-4, ...
-    'Verbose',0, ...
+    'InitialLearnRate',.0001, ...
     'Plots','training-progress');
-          
-net = trainNetwork(imdsTrain,layers,options);
+tic;          
+for i = 1:4
+    [imdsTrain,imdsTest] = splitEachLabel(imds,.6,'randomized');
+    %[imdsTrain,imdsTest] = splitEachLabel(imds,numTrainingFiles,'randomized');
 
-YPred = classify(net,imdsTest);
-YTest = imdsTest.Labels;
+    net = trainNetwork(imdsTrain,layers,options);
 
-accuracy = sum(YPred == YTest)/numel(YTest)
+    YPred = classify(net,imdsTest);
+    YTest = imdsTest.Labels;
+
+    accuracy = sum(YPred == YTest)/numel(YTest);
+    disp(accuracy);
+end
+toc;
+disp("DONE");
