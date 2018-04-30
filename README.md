@@ -9,30 +9,21 @@ These instructions will get you a copy of the project up and running on your loc
 ### Prerequisites
 
 ```
->= MATLAB R2017b
+>= MATLAB R2018a
 ```
 
 ### Installing
 
 Download the files or clone the repositiory from Github
 
-```
-TODO: Example command
-```
+* 1. Project idea can be found here: [Iceberg Classifier Challenge](https://www.kaggle.com/c/statoil-iceberg-classifier-challenge)
+* 2. Download images from Kaggle.
+* 3. Select options for transformToImage.m and run to create images for preferred channel
+* 4. Change file directory and params in CNN.m to create classifer
 
-Execute `IcebergClassifier()`
-
-```
->> IcebergClassifier();
-```
-
-The resulting information will be saved to a file/displayed in the console.
+The resulting information will be displayed in console.
 
 ## Authors
 
-* **Stephen Allan** - *swa9846* - <Contribution>
-* **Douglas Lee** - *dxl7697* - <Contribution>
-
-## Acknowledgments
-
-* Project idea can be found here: [Iceberg Classifier Challenge](https://www.kaggle.com/c/statoil-iceberg-classifier-challenge)
+* **Stephen Allan** - *swa9846* 
+* **Douglas Lee** - *dxl7697* 

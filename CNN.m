@@ -1,21 +1,3 @@
-%bring shit in
-%{
-fname = 'train.json';
-fid = fopen(fname);
-raw = fread(fid,inf);
-str = char(raw');
-fclose(fid);
-val = jsondecode(str);
-%}
-
-%just print everything
-%{
-for n = 1:length(val)
-fprintf('id: %s\n angle: %d\n avg band1: %d\n avg band2: %d\n is_iceberg: %d\n', ...
-val(n).id,val(n).inc_angle, mean(val(n).band_1), mean(val(n).band_2), val(n).is_iceberg)
-end
-%}
-
 %put the files into an image datastore with labels ship or iceberg
 imds = imageDatastore(strcat(pwd,'\images\rotateTwoDim'),...
     'IncludeSubfolders',true,...
@@ -63,7 +45,6 @@ layers = [
     classificationLayer];
 
 
-%does its job. kinda
 options = trainingOptions('sgdm', ...
     'MaxEpochs',200,...
     'InitialLearnRate',.0001, ...
